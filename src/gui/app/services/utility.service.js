@@ -150,6 +150,7 @@
                 const component = showModalContext.component;
                 const templateUrl = showModalContext.templateUrl;
                 const controllerFunc = showModalContext.controllerFunc;
+                const metadata = showModalContext.metadata || {};
                 const resolveObj = showModalContext.resolveObj || {};
                 let closeCallback = showModalContext.closeCallback;
                 let dismissCallback = showModalContext.dismissCallback;
@@ -163,6 +164,7 @@
                 const modal = {
                     ariaLabelledBy: "modal-title",
                     ariaDescribedBy: "modal-body",
+                    metadata: metadata,
                     resolve: resolveObj,
                     size: showModalContext.size,
                     keyboard: showModalContext.keyboard ? showModalContext.keyboard : true,

@@ -194,14 +194,68 @@ module.exports = {
                     value: "1000"
                 },
                 giftReceivers: {
-                    type: "gift-receivers-list",
+                    type: "simulate-list",
                     value: [
-                        { gifteeUsername: "User1", giftSubMonths: 3 },
+                        { gifteeUsername: "User1", giftSubMonths: 3,
+                            subPlanTesting: {
+                                type: "enum",
+                                options: {
+                                    1000: "Tier 1",
+                                    2000: "Tier 2",
+                                    3000: "Tier 3"
+                                },
+                                value: "1000"
+                            },
+                            listtesting: {
+                                type: "simulate-list",
+                                value: [
+                                    { gifteeUsernameTwo: "User1", giftSubMonthsTwo: 3,
+                                        subPlanTestingTwo: {
+                                            type: "enum",
+                                            options: {
+                                                1000: "Tier 1",
+                                                2000: "Tier 2",
+                                                3000: "Tier 3"
+                                            },
+                                            value: "1000"
+                                        },
+                                        listtestingTwo: {
+                                            type: "simulate-list",
+                                            value: [
+                                                { gifteeUsernameTwo: "User1", giftSubMonthsTwo: 3,
+                                                    subPlanTestingTwo: {
+                                                        type: "enum",
+                                                        options: {
+                                                            1000: "Tier 1",
+                                                            2000: "Tier 2",
+                                                            3000: "Tier 3"
+                                                        },
+                                                        value: "1000"
+                                                    }
+                                                }
+                                            ],
+                                            options: {
+                                                useModal: false,
+                                                title: "gift receiver"
+                                            }
+                                        }
+                                    }
+                                ],
+                                options: {
+                                    useModal: false,
+                                    title: "gift receiver"
+                                }
+                            }
+                        },
                         { gifteeUsername: "User2", giftSubMonths: 5 },
                         { gifteeUsername: "User3", giftSubMonths: 8 },
                         { gifteeUsername: "User4", giftSubMonths: 10 },
                         { gifteeUsername: "User5", giftSubMonths: 16 }
-                    ]
+                    ],
+                    options: {
+                        useModal: true,
+                        title: "gift receiver"
+                    }
                 }
             },
             activityFeed: {

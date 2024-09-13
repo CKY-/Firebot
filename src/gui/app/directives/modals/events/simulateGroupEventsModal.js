@@ -33,7 +33,7 @@
                             ng-repeat="data in $ctrl.metadata"
                             name="data.title"
                             metadata="data"
-                            on-update="$ctrl.isAnon(value)"
+                            on-update="$ctrl.isAnon(key, value)"
                         ></command-option>
                     </div>
                 </div>
@@ -71,7 +71,10 @@
                     $ctrl.metadata[index] = username;
                 };
 
-                $ctrl.isAnon = (isAnon) => {
+                $ctrl.isAnon = (key, isAnon) => {
+                    if (key !== "isAnonymous") {
+                        return;
+                    }
                     if ($ctrl.eventData.eventId === 'subs-gifted' || $ctrl.eventData.eventId === 'community-subs-gifted') {
                         $ctrl.changeUsername('gifterUsername', 'Gifter', isAnon);
                         return;
@@ -94,16 +97,17 @@
 
                     const eventSource = await backendCommunicator.fireEventAsync("getEventSource", event);
                     if (eventSource.manualMetadata) {
-                        $ctrl.metadata = Object.keys(eventSource.manualMetadata).map(mmd => {
+                        $ctrl.metadata = Object.keys(eventSource.manualMetadata).map((mmd) => {
                             const meta = eventSource.manualMetadata[mmd];
                             const dataType = meta == null ? "string" : meta.type || typeof meta;
                             const data = {
                                 key: mmd,
                                 title: getTitle(mmd),
                                 type: dataType,
-                                options: meta?.options || {}
+                                options: meta?.options || {},
+                                // key "value" is reserved!
+                                metadata: meta
                             };
-
                             return data;
                         });
                     } else {

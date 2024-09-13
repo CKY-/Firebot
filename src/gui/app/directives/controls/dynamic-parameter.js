@@ -94,12 +94,16 @@
             <multiselect-list model="$ctrl.metadata.value" settings="$ctrl.metadata.settings"></multiselect-list>
           </div>
 
-          <div ng-switch-when="discord-channel-webhooks" style="padding-top:5px;">
+          <div ng-switch-when="discord-channel-webhooks" class="pt-5">
             <discord-channel-webhooks model="$ctrl.metadata.value"></discord-channel-webhooks>
           </div>
 
           <div ng-switch-when="gift-receivers-list" class="pt-5">
             <gift-receivers-list model="$ctrl.metadata.value"></gift-receivers-list>
+          </div>
+          
+          <div ng-switch-when="simulate-list">
+            <simulate-list model="$ctrl.metadata.value" options="$ctrl.metadata.options" manual-metadata="$ctrl.metadata.metadata"></simulate-list>
           </div>
 
           <div ng-switch-when="effectlist">
@@ -140,9 +144,7 @@
             const ctrl = this;
 
             $scope.$watchCollection("$ctrl.metadata", (changes) => {
-                if (changes.key === 'isAnonymous') {
-                    ctrl.onUpdate({ value: changes.value });
-                }
+                ctrl.onUpdate({ key: changes.key, value: changes.value });
             });
 
             ctrl.buttonLoading = false;
