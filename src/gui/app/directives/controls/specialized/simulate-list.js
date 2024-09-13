@@ -121,6 +121,7 @@
                 };
 
                 $ctrl.showAddOrEditElementModal = (element) => {
+                    
                     utilityService.showModal({
                         component: "addOrEditDynamicModal",
                         size: "md",

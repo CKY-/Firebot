@@ -47,7 +47,7 @@
 -->
                     <div>
                         <!--<div ng-hide="$ctrl.options.useModal" ng-repeat="values in $ctrl.model track by $index" class="list-item selectable" style="border: 2px solid #4c4f4f;"> -->
-                            <div ng-hide="$ctrl.options.useModal" ng-repeat="values in $ctrl.model track by $index" class="list-item selectable" style="border: 2px solid #4c4f4f;"> <!-- non-modal -->
+                        <div ng-repeat="values in $ctrl.model track by $index" class="list-item selectable" style="border: 2px solid #4c4f4f;">
                             <div style="flex-direction: column; width: 100%">
                                 <div
                                     class="mr-2"
@@ -70,11 +70,7 @@
                     </div>
                     <p class="muted" ng-show="$ctrl.model.length < 1">No {{$ctrl.options.title}} added.</p>
                     <div class="mx-0 mt-2.5 mb-4">
-                        <button ng-show="$ctrl.options.useModal" class="filter-bar" ng-click="$ctrl.showAddOrEditElementModal()" uib-tooltip="Add {{$ctrl.options.title}}" tooltip-append-to-body="true" aria-label="Add {{$ctrl.options.title}}">
-                            <i class="far fa-plus"></i>
-                        </button>
-
-                        <button ng-hide="$ctrl.options.useModal" class="filter-bar" ng-click="$ctrl.addNewElement()" uib-tooltip="Add {{$ctrl.options.title}}" tooltip-append-to-body="true" aria-label="Add {{$ctrl.options.title}}">
+                        <button class="filter-bar" ng-click="$ctrl.addNewElement()" uib-tooltip="Add {{$ctrl.options.title}}" tooltip-append-to-body="true" aria-label="Add {{$ctrl.options.title}}">
                             <i class="far fa-plus"></i>
                         </button>
                     </div>
@@ -88,14 +84,18 @@
                 resolve: "<",
                 close: "&",
                 dismiss: "&",
-                metadata: "<"
+                metadata: "="
             },
             controller: function($scope) {
                 const $ctrl = this;
 
                 $ctrl.isNew = true;
+
                 $ctrl.model = [];
+
                 $ctrl.elements = {};
+
+                $ctrl.metadata = {};
 
                 const getTitle = (title) => {
                     const titleArray = title.split(/(?=[A-Z])/);
@@ -113,6 +113,10 @@
                     if ($ctrl.resolve.elements != null) {
                         $ctrl.elements = JSON.parse(angular.toJson($ctrl.resolve.elements));
                         $ctrl.isNew = false;
+                    }
+
+                    if ($ctrl.resolve.metadata != null) {
+                        $ctrl.metadata = JSON.parse(angular.toJson($ctrl.resolve.metadata));
                     }
 
                     const value = {};
