@@ -1,4 +1,5 @@
 "use strict";
+
 (function() {
     angular
         .module('firebotApp')
@@ -121,12 +122,11 @@
                 };
 
                 $ctrl.showAddOrEditElementModal = (element) => {
-                    
                     utilityService.showModal({
                         component: "addOrEditDynamicModal",
                         size: "md",
-                        metadata: $ctrl.manualMetadata,
                         resolveObj: {
+                            manualMetadata: () => $ctrl.manualMetadata,
                             element: () => element
                         },
                         closeCallback: (element) => {

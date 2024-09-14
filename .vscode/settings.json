@@ -1,5 +1,8 @@
 {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+     "files.exclude": {
+        "**/secrets.json": true
+    },
     "editor.formatOnSave": true,
     "conventionalCommits.scopes": [
         "effects",
