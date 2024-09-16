@@ -9,8 +9,8 @@
                     <h4 class="modal-title">{{$ctrl.isNew ? 'Add' : 'Edit'}} {{$ctrl.options.title}}</h4>
                 </div>
                 <div class="modal-body">
-            <!--          <div ng-repeat="values in $ctrl.model track by $index" class="list-item selectable" style="border: 2px solid #4c4f4f;">
-        -->           <div style="flex-direction: column; width: 100%">
+                    <form name="elements">
+                    <div style="flex-direction: column; width: 100%">
                             <div
                                 class="mr-2"
                                 ng-repeat="data in $ctrl.metadata[0]"
@@ -25,21 +25,8 @@
                                 ></command-option>
                             </div>
                         </div>
-<!--                        <span ng-show="$ctrl.model.length > 1" class="ml-2 clickable" style="color: #fb7373;" ng-click="$ctrl.removeAtIndex($index);$event.stopPropagation();" aria-label="Remove {{$ctrl.options.title}}">
-                            <i class="fad fa-trash-alt" aria-hidden="true"></i>
-                        </span>
                     </div>
-                    <p class="muted" ng-show="$ctrl.model.length < 1">No {{$ctrl.options.title}} added.</p>
-                    <div class="mx-0 mt-2.5 mb-4">
-                        <button ng-show="$ctrl.options.useModal" class="filter-bar" ng-click="$ctrl.showAddOrEditElementModal()" uib-tooltip="Add {{$ctrl.options.title}}" tooltip-append-to-body="true" aria-label="Add {{$ctrl.options.title}}">
-                            <i class="far fa-plus"></i>
-                        </button>
-                        <button ng-hide="$ctrl.options.useModal" class="filter-bar" ng-click="$ctrl.addNewElement()" uib-tooltip="Add {{$ctrl.options.title}}" tooltip-append-to-body="true" aria-label="Add {{$ctrl.options.title}}">
-                            <i class="far fa-plus"></i>
-                        </button>
-
-                    </div>
--->                </div>
+                    <form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" ng-click="$ctrl.dismiss()">Cancel</button>
                     <button type="button" class="btn btn-primary" ng-click="$ctrl.save()">Save</button>
