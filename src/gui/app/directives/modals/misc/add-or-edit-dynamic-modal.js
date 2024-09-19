@@ -9,23 +9,23 @@
                     <h4 class="modal-title">{{$ctrl.isNew ? 'Add' : 'Edit'}} {{$ctrl.options.title}}</h4>
                 </div>
                 <div class="modal-body">
-                    <form name="elements">
-                    <div style="flex-direction: column; width: 100%">
+                    <form name="metadata">
+                        <div style="flex-direction: column; width: 100%">
                             <div
-                                class="mr-2"
-                                ng-repeat="data in $ctrl.metadata[0]"
-                                style="width: 100%; margin-bottom: unset;"
-                                aria-label="{{data.title}}"
-                            >
-                                <command-option
-                                    name="data.title"
-                                    style="width: 100%;"
-                                    metadata="data"
-                                    on-update="$ctrl.updateField(value, key, values)"
-                                ></command-option>
+                                    class="mr-2"
+                                    ng-repeat="data in $ctrl.metadata.value"
+                                    style="width: 100%; margin-bottom: unset;"
+                                    aria-label="{{data.title}}"
+                                >
+                                    <command-option
+                                        name="data.title"
+                                        style="width: 100%;"
+                                        metadata="data"
+                                        on-update="$ctrl.updateField(value, key, values)"
+                                    ></command-option>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     <form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" ng-click="$ctrl.dismiss()">Cancel</button>
@@ -44,9 +44,7 @@
 
                 $ctrl.options = {};
 
-                $ctrl.elements = {};
-
-                $ctrl.model = [];
+                $ctrl.element = {};
 
                 $ctrl.metadata = [];
 
@@ -60,14 +58,18 @@
                 };
 
                 $ctrl.formFieldHasError = (fieldName) => {
-                    return ($scope.elements.$submitted || $scope.elements[fieldName].$touched)
-                        && $scope.elements[fieldName].$invalid;
+                    return ($scope.manualMetadata.$submitted || $scope.manualMetadata[fieldName].$touched)
+                        && $scope.manualMetadata[fieldName].$invalid;
                 };
 
                 $ctrl.$onInit = () => {
-                    if ($ctrl.resolve.elements != null) {
-                        $ctrl.elements = JSON.parse(angular.toJson($ctrl.resolve.elements));
+                    if ($ctrl.resolve.element != null) {
+                        $ctrl.element = JSON.parse(angular.toJson($ctrl.resolve.element));
                         $ctrl.isNew = false;
+                    }
+
+                    if ($ctrl.resolve.index != null) {
+                        $ctrl.index = JSON.parse(angular.toJson($ctrl.resolve.index));
                     }
 
                     if ($ctrl.resolve.manualMetadata != null) {
@@ -77,12 +79,14 @@
                 };
 
                 $ctrl.updateField = (value, fieldName, ref) => {
-                    ref[fieldName] = value;
+                    if (value !== undefined && ref !== undefined) {
+                        ref[fieldName] = value;
+                    }
                 };
 
                 $ctrl.addNewElement = () => {
                     const value = {};
-                    $ctrl.model.push(value);
+                    //$ctrl.metadata.push(value);
 
                     if (
                         $ctrl.manualMetadata == null ||
@@ -98,58 +102,63 @@
                     if (mmd == null || typeof mmd !== "object") {
                         console.log("danger! mmd is wrong");
                     }
-
-                    $ctrl.metadata.push(Object.entries(mmd).map(([key, data]) => {
-                        $ctrl.options = data.options;
-                        if (data == null || typeof data !== "object") {
+                    if ($ctrl.element && Object.keys($ctrl.element).length) {
+                        $ctrl.metadata = structuredClone($ctrl.element);
+                    } else {
+                        $ctrl.metadata.push(Object.entries(mmd).map(([key, data]) => {
+                            $ctrl.options = data.options;
+                            if (data == null || typeof data !== "object") {
+                                return {
+                                    key,
+                                    title: getTitle(key),
+                                    type: data == null ? "string" : typeof data,
+                                    value: value[key]
+                                };
+                            }
                             return {
                                 key,
                                 title: getTitle(key),
-                                type: data == null ? "string" : typeof data,
-                                value: value[key]
+                                type: data.type,
+                                value: value[key],
+                                options: data.options,
+                                metadata: data
                             };
-                        }
-                        return {
-                            key,
-                            title: getTitle(key),
-                            type: data.type,
-                            value: value[key],
-                            options: data.options,
-                            metadata: data
-                        };
-                    }));
+                        }));
+                    }
                 };
 
-                $ctrl.showAddOrEditElementModal = (element) => {
+                $ctrl.showAddOrEditElementModal = (element, index) => {
                     utilityService.showModal({
                         component: "addOrEditDynamicModal",
                         size: "md",
                         resolveObj: {
+                            index: () => index,
                             manualMetadata: () => $ctrl.manualMetadata,
                             element: () => element
                         },
                         closeCallback: (element) => {
-                            //validate data?
-                            //$ctrl.model = $ctrl.model.filter(gr => gr.gifteeUsername !== element.gifteeUsername);
-                            $ctrl.model.push(element);
+                            $ctrl.metadata[element.index] = element.element;
                         }
                     });
-                    console.log($ctrl.model);
+                    console.log("metadata");
+                    console.log($ctrl.metadata);
                 };
 
                 $ctrl.removeAtIndex = (index) => {
-                    $ctrl.model.splice(index, 1);
-                    $ctrl.metadata.splice();
+                    $ctrl.metadata.splice(index, 1);
                 };
 
                 $ctrl.save = () => {
-                    $scope.elements.$setSubmitted();
-                    if ($scope.elements.$invalid) {
+                    $scope.metadata.$setSubmitted();
+                    if ($scope.metadata.$invalid) {
                         return;
                     }
 
                     $ctrl.close({
-                        $value: $ctrl.elements
+                        $value: {
+                            element: $ctrl.metadata,
+                            index: $ctrl.index ?? 0
+                        }
                     });
                 };
             }

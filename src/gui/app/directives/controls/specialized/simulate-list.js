@@ -12,14 +12,17 @@
             },
             template: `
                 <div>
-                    <div ng-show="$ctrl.options.useModal" ng-repeat="values in $ctrl.model track by $index" class="list-item selectable" ng-click="$ctrl.showAddOrEditElementModal(values)"> <!-- modal-based -->
-                        <div ng-repeat="(key, value) in values" uib-tooltip="Click to edit" class="ml-8" style="font-weight: 400;width: 100%;" aria-label="{{values.key + ' (Click to edit)'}}">
-                            <div>
-                                <b>{{values.key}}:</b> {{values.value}}
-                            </div> 
-                               <b>Gift Sub Months:</b> {{values.value}}
+                    <div ng-show="$ctrl.options.useModal" ng-repeat="values in $ctrl.model track by $index" class="list-item selectable" ng-click="$ctrl.showAddOrEditElementModal(values, $index)"> <!-- modal-based -->
+                          <!-- (key, title, value, type) -->
+                        <div ng-repeat="obj in values">
+                                <div ng-repeat="childobj in obj" uib-tooltip="Click to edit" class="ml-8" style="font-weight: 400;width: 100%;" aria-label="{{childobj.title + ' (Click to edit)'}}">
+                                    <div ng-if="childobj.type !== 'simulate-list'">
+                                        {{childobj.type}}
+                                        <b>{{childobj.title}}:</b> {{childobj.value}}
+                                    </div> 
+                                </div>
                         </div>
-                        <span class="clickable" style="color: #fb7373;" ng-click="$ctrl.removeAtIndex($index);$event.stopPropagation();" aria-label="Remove gift receiver">
+                        <span class="clickable" style="color: #fb7373;" ng-click="$ctrl.removeAtIndex($index);$event.stopPropagation();" aria-label="Remove $ctrl.options.title">
                             <i class="fad fa-trash-alt" aria-hidden="true"></i>
                         </span>
                     </div>
@@ -79,6 +82,8 @@
                 $ctrl.$onInit = () => {
                     if ($ctrl.model == null) {
                         $ctrl.model = [];
+                    } else {
+                        $ctrl.metadata = structuredClone($ctrl.model);
                     }
                 };
 
@@ -100,7 +105,10 @@
                     if (mmd == null || typeof mmd !== "object") {
                         console.log("danger! mmd is wrong");
                     }
-
+                    // if ($ctrl.model && Object.keys($ctrl.model).length) {
+                    //     $ctrl.metadata = structuredClone($ctrl.model);
+                    //     return;
+                    // }
                     $ctrl.metadata.push(Object.entries(mmd).map(([key, data]) => {
                         if (data == null || typeof data !== "object") {
                             return {
@@ -121,23 +129,23 @@
                     }));
                 };
 
-                $ctrl.showAddOrEditElementModal = (element) => {
+                $ctrl.showAddOrEditElementModal = (element, index) => {
                     utilityService.showModal({
                         component: "addOrEditDynamicModal",
                         size: "md",
                         resolveObj: {
+                            index: () => index ?? $ctrl.model.length,
                             manualMetadata: () => $ctrl.manualMetadata,
                             element: () => element
                         },
                         closeCallback: (element) => {
                             //validate data?
-                            //$ctrl.model = $ctrl.model.filter(gr => gr.gifteeUsername !== element.gifteeUsername);
-                            $ctrl.model.push(element);
+                            $ctrl.model[element.index] = element.element;
+                            console.log(JSON.stringify($ctrl.model));
                         }
                     });
-                    console.log($ctrl.model);
+                    console.log(JSON.stringify($ctrl.model));
                 };
-
 
                 $ctrl.removeAtIndex = (index) => {
                     $ctrl.model.splice(index, 1);
