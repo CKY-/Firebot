@@ -13,7 +13,7 @@
                         <div style="flex-direction: column; width: 100%">
                             <div
                                     class="mr-2"
-                                    ng-repeat="data in $ctrl.metadata.value"
+                                    ng-repeat="data in $ctrl.metadata[0]"
                                     style="width: 100%; margin-bottom: unset;"
                                     aria-label="{{data.title}}"
                                 >
