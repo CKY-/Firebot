@@ -79,7 +79,7 @@
                 };
 
                 $ctrl.updateField = (value, fieldName, ref) => {
-                    if (value !== undefined && ref !== undefined) {
+                    if ((value !== undefined && ref !== undefined)) { //|| Object.entries
                         ref[fieldName] = value;
                     }
                 };

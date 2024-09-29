@@ -17,7 +17,6 @@
                         <div ng-repeat="obj in values">
                                 <div ng-repeat="childobj in obj" uib-tooltip="Click to edit" class="ml-8" style="font-weight: 400;width: 100%;" aria-label="{{childobj.title + ' (Click to edit)'}}">
                                     <div ng-if="childobj.type !== 'simulate-list'">
-                                        {{childobj.type}}
                                         <b>{{childobj.title}}:</b> {{childobj.value}}
                                     </div> 
                                 </div>
