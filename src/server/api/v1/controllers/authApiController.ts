@@ -2,7 +2,7 @@
 import logger from '../../../../backend/logwrapper';
 import authManager from '../../../../backend/auth/auth-manager';
 import { Request, Response } from "express";
-import { AuthProvider, AuthProviderDefinition } from "../../../../backend/auth/auth";
+import { AuthDetails, AuthProvider, AuthProviderDefinition } from "../../../../backend/auth/auth";
 import ClientOAuth2 from "client-oauth2";
 
 export function getAuth(req: Request, res: Response) {
@@ -40,7 +40,7 @@ export async function getAuthCallback(req: Request, res: Response) {
                 break;
 
             case "code":
-            // Force these because the library adds them as an auth header, not in the body
+                // Force these because the library adds them as an auth header, not in the body
                 tokenOptions.body["client_id"] = provider.details.client.id;
                 tokenOptions.body["client_secret"] = provider.details.client.secret;
 
@@ -52,7 +52,18 @@ export async function getAuthCallback(req: Request, res: Response) {
         }
 
         logger.info(`Received token from provider id '${provider.id}'`);
-        const tokenData: ClientOAuth2.Data = token.data;
+        const rawTokenData: ClientOAuth2.Data = token.data;
+        // Initiate empty minimal object
+        let tokenData: AuthDetails = {
+            access_token: "", // eslint-disable-line camelcase
+            refresh_token: "", // eslint-disable-line camelcase
+            token_type: "", // eslint-disable-line camelcase
+            scope: []
+        };
+        // Keep all properties we can
+        tokenData = Object.assign(tokenData, rawTokenData);
+        // Process the scope
+        tokenData.scope = rawTokenData.scope.split(" ");
 
         authManager.successfulAuth(provider.id, tokenData);
 
