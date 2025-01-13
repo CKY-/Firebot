@@ -1,11 +1,13 @@
 "use strict";
-const logger = require('../../../../backend/logwrapper');
-const authManager = require('../../../../backend/auth/auth-manager');
+import logger from '../../../../backend/logwrapper';
+import authManager from '../../../../backend/auth/auth-manager';
+import { Request, Response } from "express";
+import { AuthProvider, AuthProviderDefinition } from "../../../../backend/auth/auth";
+import ClientOAuth2 from "client-oauth2";
 
-exports.getAuth = (req, res) => {
+export function getAuth(req: Request, res: Response) {
     const providerId = req.query.providerId;
-
-    const provider = authManager.getAuthProvider(providerId);
+    const provider: AuthProvider = typeof providerId === "string" ? authManager.getAuthProvider(providerId) : null;
 
     if (provider == null) {
         return res.status(400).json('Invalid providerId query param');
@@ -14,28 +16,23 @@ exports.getAuth = (req, res) => {
     logger.info(`Redirecting to provider auth uri: ${provider.authorizationUri}`);
 
     res.redirect(provider.authorizationUri);
-};
+}
 
-exports.getAuthCallback = async (
-    /** @type {import("express").Request} */ req,
-    /** @type {import("express").Response} */ res) => {
-    const state = req.query.state;
+export async function getAuthCallback(req: Request, res: Response) {
+    const state: string = typeof req.query.state === "string" ? req.query.state : null;
+    const provider: AuthProvider = authManager.getAuthProvider(state);
 
-    /** @type {import("../../../../backend/auth/auth").AuthProvider} */
-    const provider = authManager.getAuthProvider(state);
     if (provider == null) {
         return res.status(400).json('Invalid provider id in state');
     }
 
     try {
-        const fullUrl = req.originalUrl.replace("callback2", "callback");
-        /** @type {import("client-oauth2").Token} */
-        let token;
+        const fullUrl: string = req.originalUrl.replace("callback2", "callback");
+        let token: ClientOAuth2.Token;
 
-        const authType = provider.details.auth.type ?? "code";
+        const authType: AuthProviderDefinition["auth"]["type"] = provider.details.auth.type ?? "code";
 
-        /** @type {import("client-oauth2").Options} */
-        const tokenOptions = { body: {} };
+        const tokenOptions: ClientOAuth2.Options = { body: {} };
 
         switch (authType) {
             case "token":
@@ -55,8 +52,7 @@ exports.getAuthCallback = async (
         }
 
         logger.info(`Received token from provider id '${provider.id}'`);
-        const tokenData = token.data;
-        tokenData.scope = tokenData.scope?.split(" ");
+        const tokenData: ClientOAuth2.Data = token.data;
 
         authManager.successfulAuth(provider.id, tokenData);
 
@@ -65,4 +61,4 @@ exports.getAuthCallback = async (
         logger.error('Access Token Error', error.message);
         return res.status(500).json('Authentication failed');
     }
-};
+}
