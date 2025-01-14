@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import ClientOAuth2 from "client-oauth2";
 import logger from "../logwrapper";
-import { AuthProvider, AuthProviderDefinition } from "./auth";
+import { AuthDetails, AuthProvider, AuthProviderDefinition } from "./auth";
 import { SettingsManager } from "../common/settings-manager";
 import frontendCommunicator from "../common/frontend-communicator";
 import { Notification, app } from "electron";
@@ -124,7 +124,7 @@ class AuthManager extends EventEmitter {
         }
     }
 
-    successfulAuth(providerId: string, tokenData: unknown): void {
+    successfulAuth(providerId: string, tokenData: AuthDetails): void {
         this.emit("auth-success", { providerId: providerId, tokenData: tokenData });
     }
 }
