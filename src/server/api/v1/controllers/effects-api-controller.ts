@@ -126,6 +126,8 @@ export async function runPresetEffectList(req: Request, res: Response, waitForCo
         });
     }
 
+    username = username ?? "API User";
+
     const processEffectsRequest = {
         trigger: {
             type: EffectTrigger.PRESET_LIST,

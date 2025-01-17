@@ -1,8 +1,8 @@
-"use strict";
+
 import logger from '../../../../backend/logwrapper';
 import authManager from '../../../../backend/auth/auth-manager';
 import { Request, Response } from "express";
-import { AuthDetails, AuthProvider, AuthProviderDefinition } from "../../../../backend/auth/auth";
+import { AuthProvider, AuthProviderDefinition } from "../../../../backend/auth/auth";
 import ClientOAuth2 from "client-oauth2";
 
 export function getAuth(req: Request, res: Response) {
@@ -10,7 +10,10 @@ export function getAuth(req: Request, res: Response) {
     const provider: AuthProvider = typeof providerId === "string" ? authManager.getAuthProvider(providerId) : null;
 
     if (provider == null) {
-        return res.status(400).json('Invalid providerId query param');
+        return res.status(400).json({
+            status: "error",
+            message: "Invalid providerId query param"
+        });
     }
 
     logger.info(`Redirecting to provider auth uri: ${provider.authorizationUri}`);
@@ -23,7 +26,10 @@ export async function getAuthCallback(req: Request, res: Response) {
     const provider: AuthProvider = authManager.getAuthProvider(state);
 
     if (provider == null) {
-        return res.status(400).json('Invalid provider id in state');
+        return res.status(400).json({
+            status: "error",
+            message: "Invalid provider id in state"
+        });
     }
 
     try {
@@ -52,24 +58,20 @@ export async function getAuthCallback(req: Request, res: Response) {
         }
 
         logger.info(`Received token from provider id '${provider.id}'`);
-        const rawTokenData: ClientOAuth2.Data = token.data;
-        // Initiate empty minimal object
-        let tokenData: AuthDetails = {
-            access_token: "", // eslint-disable-line camelcase
-            refresh_token: "", // eslint-disable-line camelcase
-            token_type: "", // eslint-disable-line camelcase
-            scope: []
-        };
-        // Keep all properties we can
-        tokenData = Object.assign(tokenData, rawTokenData);
-        // Process the scope
-        tokenData.scope = rawTokenData.scope.split(" ");
 
-        authManager.successfulAuth(provider.id, tokenData);
+        const newTokenData = {
+            ...token.data,
+            scope: token.data.scope.split(" ")
+        };
+
+        authManager.successfulAuth(provider.id, newTokenData);
 
         return res.redirect(`/loginsuccess?provider=${encodeURIComponent(provider.details.name)}`);
     } catch (error) {
         logger.error('Access Token Error', error.message);
-        return res.status(500).json('Authentication failed');
+        return res.status(500).json({
+            status: "error",
+            message: "Authentication failed"
+        });
     }
 }
