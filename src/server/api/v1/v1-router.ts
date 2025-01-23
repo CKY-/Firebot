@@ -307,8 +307,7 @@ router.route("/effects/:effectId")
  *       required: true
  *       description: The ID of the effect.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Runs a preset list synchronously.
  *     responses:
@@ -369,8 +368,7 @@ router.route("/effects/preset/:presetListId")
  *       required: true
  *       description: The ID of the effect.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Triggers a preset list asynchronously.
  *     responses:
@@ -522,8 +520,7 @@ router.route("/commands/system/:sysCommandId")
  *       required: true
  *       description: The ID of the effect.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Executes a system command.
  *     responses:
@@ -585,14 +582,12 @@ router.route("/commands/custom")
  *       required: true
  *       description: The ID of the custom command.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Fetches a specific custom command by its ID.
  *     responses:
  *       200:
  *         description: Custom command fetched successfully.
-
  *         content:
  *           application/json:
  *             schema:
@@ -658,8 +653,7 @@ router.route("/commands/custom/:customCommandId")
  *       required: true
  *       description: The ID of the effect.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Executes a custom command.
  *     responses:
@@ -698,6 +692,16 @@ import * as fonts from "./controllers/fonts-api-controller";
  *     responses:
  *       200:
  *         description: Font names returned successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *             example:
+ *               - name: Arial
+ *                 format: truetype
+ *               - ...
  */
 router.route("/fonts")
     .get(fonts.getFontNames);
@@ -761,8 +765,7 @@ router.route("/custom-variables")
  *       required: true
  *       description: The name of the custom variable.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: "#/components/schemas/UUIDString"
  *   get:
  *     description: Fetches a specific custom variable by name.
  *     responses:
@@ -802,6 +805,29 @@ import * as variableManager from "./controllers/variable-api-controller";
  *     responses:
  *       200:
  *         description: Replace variables fetched successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *               examples:
+ *                 - definition:
+ *                     handle: "$name"
+ *                     usage: "$name [...path?]"
+ *                     description: Retrieves the value for an effectOutput. If path is specified, walks the item before returning the value
+ *                     examples:
+ *                       - usage: "$example"
+ *                         description: Returns the value of the effectOutput 'example' Synonymous with $effectOutput[example]
+ *                       - usage: "$example[path, to, value]"
+ *                         description: Returns the value of the effectOutput 'example' Synonymous with $effectOutput[example, path.to.value]
+ *                     categories:
+ *                       - advanced
+ *                     possibleDataOutput:
+ *                       - ALL
+ *                     spoof: true
+ *                   handle: "$name"
+ *                 - ...
  */
 router.route("/variables")
     .get(variableManager.getReplaceVariables);
@@ -817,6 +843,17 @@ import * as viewers from "./controllers/viewers-api-controller";
  *     responses:
  *       200:
  *         description: Viewer data returned successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *             examples:
+ *               - id: "58612601"
+ *                 username: ebiggz
+ *                 displayName: ebiggz
+ *               - ...
  */
 router.route("/viewers")
     .get(viewers.getAllUsers);
@@ -829,6 +866,40 @@ router.route("/viewers")
  *     responses:
  *       200:
  *         description: Viewer data exported as JSON.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *             examples:
+ *               - username: ebiggz
+ *                 _id: "58612601"
+ *                 displayName: ebiggz
+ *                 profilePicUrl: https://static-cdn.jtvnw.net/jtv_user_pictures/5545fe76-a341-4ffb-bc79-7ca8075588a1-profile_image-300x300.png
+ *                 twitch: true
+ *                 twitchRoles:
+ *                   - broadcaster
+ *                   - sub
+ *                 online: false
+ *                 onlineAt: 1733422513344
+ *                 lastSeen: 1733425628339
+ *                 joinDate: 1677340192238
+ *                 minutesInChannel: 2908
+ *                 chatMessages: 595
+ *                 disableAutoStatAccrual: false
+ *                 disableActiveUserList: false
+ *                 disableViewerList: false
+ *                 metadata:
+ *                   giftedSubs: 4
+ *                 currency:
+ *                   d073da00-a726-11e9-a874-7de9c8544807:
+ *                     id: d073da00-a726-11e9-a874-7de9c8544807
+ *                     name: Points
+ *                     amount: 3479
+ *                 ranks:
+ *                   4e834bc0-47a8-11ef-acab-ab8744fe0dbe: 5b149d83-3021-4afd-875d-034b00a4a91b
+ *               - ...
  */
 router.route("/viewers/export")
     .get(viewers.getAllUserDataAsJSON);
@@ -843,11 +914,48 @@ router.route("/viewers/export")
  *       description: An ID that uniquely identifies the user.
  *       schema:
  *         type: string
+ *     - in: query
+ *       name: username
+ *       description: use username or userId true/false (default false).
+ *       schema:
+ *         type: string
  *   get:
  *     description: Fetches metadata of a specific viewer by userId.
  *     responses:
  *       200:
  *         description: Viewer metadata fetched successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               username: ebiggz
+ *               _id: "58612601"
+ *               displayName: ebiggz
+ *               profilePicUrl: https://static-cdn.jtvnw.net/jtv_user_pictures/5545fe76-a341-4ffb-bc79-7ca8075588a1-profile_image-300x300.png
+ *               twitch: true
+ *               twitchRoles:
+ *                 - broadcaster
+ *                 - sub
+ *               online: false
+ *               onlineAt: 1733422513344
+ *               lastSeen: 1733425628339
+ *               joinDate: 1677340192238
+ *               minutesInChannel: 2908
+ *               chatMessages: 595
+ *               disableAutoStatAccrual: false
+ *               disableActiveUserList: false
+ *               disableViewerList: false
+ *               metadata:
+ *                 giftedSubs: 4
+ *               currency:
+ *                 d073da00-a726-11e9-a874-7de9c8544807: 3479
+ *                 3eba5d80-4297-11ee-86eb-d7d7d2938882: 3445
+ *               ranks:
+ *                 4e834bc0-47a8-11ef-acab-ab8744fe0dbe: 5b149d83-3021-4afd-875d-034b00a4a91b
+ *               customRoles:
+ *                 - id: 6f3b78b0-025c-11ef-bcad-3ff3fa1199ea
+ *                   name: firebot
  *       400:
  *         description: No viewerIdOrName provided.
  *       404:
@@ -967,11 +1075,23 @@ router.route("/viewers/:userId/metadata/:metadataKey")
  *       description: An ID that uniquely identifies the user.
  *       schema:
  *         type: string
+ *     - in: query
+ *       name: username
+ *       description: use username or userId true/false (default false).
+ *       schema:
+ *         type: string
  *   get:
  *     description: Fetches currency details for a specific viewer.
  *     responses:
  *       200:
  *         description: User currency fetched successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               d073da00-a726-11e9-a874-7de9c8544807: 3479
+ *               3eba5d80-4297-11ee-86eb-d7d7d2938882: 3445
  *       400:
  *         description: No viewerIdOrName provided.
  */
@@ -982,24 +1102,17 @@ router.route("/viewers/:userId/currency")
  * @openapi
  * /viewers/{userId}/currency/{currencyId}:
  *   parameters:
- *     - in: path
- *       name: currencyId
- *       required: true
- *       description: The ID of the currency.
- *       schema:
- *         type: string
- *         format: uuid
- *     - in: path
- *       name: userId
- *       required: true
- *       description: An ID that uniquely identifies the user.
- *       schema:
- *         type: string
+ *     $ref: "#/components/parameters/userParam"
  *   get:
  *     description: Fetches specific currency details for a viewer.
  *     responses:
- *       204:
+ *       200:
  *         description: User currency set successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *             example: 3479
  *       400:
  *         description: No currencyId provided.
  *         content:
@@ -1085,8 +1198,7 @@ router.route("/viewers/:userId/customRoles")
  *       required: true
  *       description: The ID of the custom role.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   post:
  *     description: Adds a specific viewer to a custom role.
  *     responses:
@@ -1134,8 +1246,7 @@ router.route("/customRoles")
  *       required: true
  *       description: The ID of the custom role.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Fetches a specific custom role by its ID.
  *     responses:
@@ -1158,8 +1269,7 @@ router.route("/customRoles/:customRoleId")
  *       required: true
  *       description: The ID of the custom role.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Clears all viewers from a specific custom role.
  *     responses:
@@ -1182,8 +1292,7 @@ router.route("/customRoles/:customRoleId/clear")
  *       required: true
  *       description: The ID of the custom role.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *     - in: path
  *       name: userId
  *       required: true
@@ -1358,6 +1467,12 @@ import * as quotes from "./controllers/quotes-api-controller";
  *     responses:
  *       201:
  *         description: Quote updated successfully.
+ *         content:
+ *           application/json:
+ *             examples:
+ *               QuoteUpdated:
+ *                 summary: Quote updated successfully.
+ *                 value:
  *       400:
  *         description: Missing quote text
  *         content:
@@ -1389,8 +1504,7 @@ router.route("/quotes")
  *       required: true
  *       description: The ID of the quote.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Fetches a specific quote by its ID.
  *     responses:
@@ -1513,8 +1627,7 @@ router.route("/counters")
  *       required: true
  *       description: The ID of the counter.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Fetches a specific counter by its ID.
  *     responses:
@@ -1598,8 +1711,7 @@ router.route("/timers")
  *       required: true
  *       description: The ID of the timer.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Fetches a specific timer by its ID.
  *     responses:
@@ -1622,8 +1734,7 @@ router.route("/timers/:timerId")
  *       required: true
  *       description: The ID of the timer.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *     - in: path
  *       name: action
  *       required: true
@@ -1633,7 +1744,7 @@ router.route("/timers/:timerId")
  *   get:
  *     description: Updates a specific timer by its ID.
  *     responses:
- *       201:
+ *       200:
  *         description: Timer updated successfully.
  *       400:
  *         description: invalid action provided.
@@ -1680,8 +1791,7 @@ router.route("/queues")
  *       required: true
  *       description: The ID of the queue.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Fetches a specific queue by its ID.
  *     responses:
@@ -1704,8 +1814,7 @@ router.route("/queues/:queueId")
  *       required: true
  *       description: The ID of the queue.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Pauses a specific queue by its ID.
  *     responses:
@@ -1738,8 +1847,7 @@ router.route("/queues/:queueId/pause")
  *       required: true
  *       description: The ID of the queue.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Resumes a specific queue by its ID.
  *     responses:
@@ -1772,8 +1880,7 @@ router.route("/queues/:queueId/resume")
  *       required: true
  *       description: The ID of the queue.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Toggles a specific queue by its ID.
  *     responses:
@@ -1806,8 +1913,7 @@ router.route("/queues/:queueId/toggle")
  *       required: true
  *       description: The ID of the queue.
  *       schema:
- *         type: string
- *         format: uuid
+ *         $ref: '#/components/schemas/UUIDString'
  *   get:
  *     description: Clears a specific queue by its ID.
  *     responses:
@@ -1832,3 +1938,30 @@ router.route("/queues/:queueId/clear")
     .post(queues.clearQueue);
 
 module.exports = router;
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     UUIDString: # Can be referenced via '#/components/schemas/UUIDString'
+ *       type: string
+ *       format: uuid
+ *   parameters:
+ *     userParam: # Can be referenced via '#/components/parameters/userParam'
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: An ID that uniquely identifies the user.
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: metadataKey
+ *         required: true
+ *         description: The key of the metadata to be modified or deleted.
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: username
+ *         description: use username or userId true/false (default false).
+ *         schema:
+ *           type: string
+ */
