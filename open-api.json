@@ -27,6 +27,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "auth"
+        ],
         "description": "Returns authentication details.",
         "responses": {
           "200": {
@@ -50,6 +53,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "auth"
+        ],
         "description": "Handles the callback from the authentication provider.",
         "responses": {
           "200": {
@@ -66,6 +72,9 @@
     },
     "/auth/tokencallback": {
       "get": {
+        "tags": [
+          "auth"
+        ],
         "description": "Handles token callback from the authentication provider.",
         "responses": {
           "200": {
@@ -82,6 +91,9 @@
     },
     "/status": {
       "get": {
+        "tags": [
+          "status"
+        ],
         "description": "Returns the status of the API or system.",
         "responses": {
           "200": {
@@ -101,6 +113,9 @@
     },
     "/effects": {
       "get": {
+        "tags": [
+          "effects"
+        ],
         "description": "Fetches all effects.",
         "responses": {
           "200": {
@@ -1000,36 +1015,36 @@
                   "type": "array",
                   "items": {
                     "type": "object"
-                  },
-                  "examples": [
-                    {
-                      "definition": {
-                        "handle": "$name",
-                        "usage": "$name [...path?]",
-                        "description": "Retrieves the value for an effectOutput. If path is specified, walks the item before returning the value",
-                        "examples": [
-                          {
-                            "usage": "$example",
-                            "description": "Returns the value of the effectOutput 'example' Synonymous with $effectOutput[example]"
-                          },
-                          {
-                            "usage": "$example[path, to, value]",
-                            "description": "Returns the value of the effectOutput 'example' Synonymous with $effectOutput[example, path.to.value]"
-                          }
-                        ],
-                        "categories": [
-                          "advanced"
-                        ],
-                        "possibleDataOutput": [
-                          "ALL"
-                        ],
-                        "spoof": true
-                      },
-                      "handle": "$name"
+                  }
+                },
+                "example": [
+                  {
+                    "definition": {
+                      "handle": "&name",
+                      "usage": "&name[...path?]",
+                      "description": "Retrieves the value for an effectOutput. If path is specified, walks the item before returning the value",
+                      "examples": [
+                        {
+                          "usage": "&example",
+                          "description": "Returns the value of the effectOutput 'example'; Synonymous with $effectOutput[example]"
+                        },
+                        {
+                          "usage": "&example[path, to, value]",
+                          "description": "Returns the value of the effectOutput 'example'; Synonymous with $effectOutput[example, path.to.value]"
+                        }
+                      ],
+                      "categories": [
+                        "advanced"
+                      ],
+                      "possibleDataOutput": [
+                        "ALL"
+                      ],
+                      "spoof": true
                     },
-                    "..."
-                  ]
-                }
+                    "handle": "&name"
+                  },
+                  "..."
+                ]
               }
             }
           }
@@ -1050,7 +1065,7 @@
                     "type": "object"
                   }
                 },
-                "examples": [
+                "example": [
                   {
                     "id": "58612601",
                     "username": "ebiggz",
@@ -1078,7 +1093,7 @@
                     "type": "object"
                   }
                 },
-                "examples": [
+                "example": [
                   {
                     "username": "ebiggz",
                     "_id": "58612601",
@@ -1389,9 +1404,17 @@
       }
     },
     "/viewers/{userId}/currency/{currencyId}": {
-      "parameters": {
-        "$ref": "#/components/parameters/userParam"
-      },
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/userIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/currencyId"
+        },
+        {
+          "$ref": "#/components/parameters/usernameBoolParam"
+        }
+      ],
       "get": {
         "description": "Fetches specific currency details for a viewer.",
         "responses": {
@@ -1444,7 +1467,11 @@
                   },
                   "setAmount": {
                     "description": "Indicates whether to set or adjust.",
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                      "set",
+                      "adjust"
+                    ]
                   }
                 }
               },
@@ -2195,7 +2222,13 @@
           "required": true,
           "description": "The action to be preformed. can be \"toggle\", \"enable\", \"disable\" or \"clear\".",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "toggle",
+              "enable",
+              "disable",
+              "clear"
+            ]
           }
         }
       ],
@@ -2444,35 +2477,55 @@
       }
     },
     "parameters": {
-      "userParam": [
-        {
-          "in": "path",
-          "name": "userId",
-          "required": true,
-          "description": "An ID that uniquely identifies the user.",
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "in": "path",
-          "name": "metadataKey",
-          "required": true,
-          "description": "The key of the metadata to be modified or deleted.",
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "in": "query",
-          "name": "username",
-          "description": "use username or userId true/false (default false).",
-          "schema": {
-            "type": "string"
-          }
+      "userIdParam": {
+        "in": "path",
+        "name": "userId",
+        "required": true,
+        "description": "An ID that uniquely identifies the user.",
+        "schema": {
+          "type": "string"
         }
-      ]
+      },
+      "metadataKeyParam": {
+        "in": "path",
+        "name": "metadataKey",
+        "required": true,
+        "description": "The key of the metadata to be modified or deleted.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "usernameBoolParam": {
+        "in": "query",
+        "name": "username",
+        "description": "use username or userId true/false (default false).",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "currencyId": {
+        "in": "path",
+        "name": "currencyId",
+        "required": true,
+        "description": "The ID of the currency.",
+        "schema": {
+          "$ref": "#/components/schemas/UUIDString"
+        }
+      }
     }
   },
-  "tags": []
+  "tags": [
+    {
+      "name": "auth",
+      "description": "auth endpoints"
+    },
+    {
+      "name": "status",
+      "description": "get the connection status"
+    },
+    {
+      "name": "effects",
+      "description": "find out all about effects"
+    }
+  ]
 }

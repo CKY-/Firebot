@@ -21,7 +21,9 @@ import * as auth from "./controllers/auth-api-controller";
  *       schema:
  *         type: string
  *   get:
- *     description: Returns authentication details.
+ *     tags:
+ *       - auth
+ *     description: Redirects the user to the authorization URI of the specified authentication provider. (e.g., Google OAuth2 authorization page).
  *     responses:
  *       200:
  *         description: Auth details returned successfully.
@@ -37,11 +39,13 @@ router.route("/auth")
  *   parameters:
  *     - in: query
  *       name: state
- *       description: Client generated random string for the state parameter..
+ *       description: The state passed in the initial authentication request, used to identify the provider..
  *       schema:
  *         type: string
  *   get:
- *     description: Handles the callback from the authentication provider.
+ *     tags:
+ *       - auth
+ *     description: Callback endpoint for authentication providers after user authorization. It exchanges the authorization code or token for an access token.
  *     responses:
  *       200:
  *         description: Authentication callback handled.
@@ -57,6 +61,8 @@ router.route("/auth/callback2")
  * @openapi
  * /auth/tokencallback:
  *   get:
+ *     tags:
+ *       - auth
  *     description: Handles token callback from the authentication provider.
  *     responses:
  *       200:
@@ -76,7 +82,9 @@ import * as status from "./controllers/status-api-controller";
  * @openapi
  * /status:
  *   get:
- *     description: Returns the status of the API or system.
+ *     tags:
+ *       - status
+ *     description: Fetches the current status of Firebots connections, specifically the chat connection status.
  *     responses:
  *       200:
  *         description: Status returned successfully.
@@ -96,6 +104,8 @@ import * as effects from "./controllers/effects-api-controller";
  * @openapi
  * /effects:
  *   get:
+ *     tags:
+ *      - effects
  *     description: Fetches all effects.
  *     responses:
  *       200:
@@ -811,23 +821,23 @@ import * as variableManager from "./controllers/variable-api-controller";
  *               type: array
  *               items:
  *                 type: object
- *               examples:
- *                 - definition:
- *                     handle: "$name"
- *                     usage: "$name [...path?]"
- *                     description: Retrieves the value for an effectOutput. If path is specified, walks the item before returning the value
- *                     examples:
- *                       - usage: "$example"
- *                         description: Returns the value of the effectOutput 'example' Synonymous with $effectOutput[example]
- *                       - usage: "$example[path, to, value]"
- *                         description: Returns the value of the effectOutput 'example' Synonymous with $effectOutput[example, path.to.value]
- *                     categories:
- *                       - advanced
- *                     possibleDataOutput:
- *                       - ALL
- *                     spoof: true
- *                   handle: "$name"
- *                 - ...
+ *             example:
+ *               - definition:
+ *                   handle: "&name"
+ *                   usage: "&name[...path?]"
+ *                   description: "Retrieves the value for an effectOutput. If path is specified, walks the item before returning the value"
+ *                   examples:
+ *                     - usage: "&example"
+ *                       description: "Returns the value of the effectOutput 'example'; Synonymous with $effectOutput[example]"
+ *                     - usage: "&example[path, to, value]"
+ *                       description: "Returns the value of the effectOutput 'example'; Synonymous with $effectOutput[example, path.to.value]"
+ *                   categories:
+ *                     - "advanced"
+ *                   possibleDataOutput:
+ *                     - "ALL"
+ *                   spoof: true
+ *                 handle: "&name"
+ *               - "..."
  */
 router.route("/variables")
     .get(variableManager.getReplaceVariables);
@@ -849,7 +859,7 @@ import * as viewers from "./controllers/viewers-api-controller";
  *               type: array
  *               items:
  *                 type: object
- *             examples:
+ *             example:
  *               - id: "58612601"
  *                 username: ebiggz
  *                 displayName: ebiggz
@@ -872,7 +882,7 @@ router.route("/viewers")
  *               type: array
  *               items:
  *                 type: object
- *             examples:
+ *             example:
  *               - username: ebiggz
  *                 _id: "58612601"
  *                 displayName: ebiggz
@@ -1102,7 +1112,9 @@ router.route("/viewers/:userId/currency")
  * @openapi
  * /viewers/{userId}/currency/{currencyId}:
  *   parameters:
- *     $ref: "#/components/parameters/userParam"
+ *    - $ref: "#/components/parameters/userIdParam"
+ *    - $ref: "#/components/parameters/currencyId"
+ *    - $ref: "#/components/parameters/usernameBoolParam"
  *   get:
  *     description: Fetches specific currency details for a viewer.
  *     responses:
@@ -1141,6 +1153,7 @@ router.route("/viewers/:userId/currency")
  *               setAmount:
  *                 description: Indicates whether to set or adjust.
  *                 type: string
+ *                 enum: [set, adjust]
  *           examples:
  *             set:
  *               value:
@@ -1741,6 +1754,7 @@ router.route("/timers/:timerId")
  *       description: The action to be preformed. can be "toggle", "enable", "disable" or "clear".
  *       schema:
  *         type: string
+ *         enum: [toggle, enable, disable, clear]
  *   get:
  *     description: Updates a specific timer by its ID.
  *     responses:
@@ -1946,22 +1960,38 @@ module.exports = router;
  *       type: string
  *       format: uuid
  *   parameters:
- *     userParam: # Can be referenced via '#/components/parameters/userParam'
- *       - in: path
- *         name: userId
- *         required: true
- *         description: An ID that uniquely identifies the user.
- *         schema:
- *           type: string
- *       - in: path
- *         name: metadataKey
- *         required: true
- *         description: The key of the metadata to be modified or deleted.
- *         schema:
- *           type: string
- *       - in: query
- *         name: username
- *         description: use username or userId true/false (default false).
- *         schema:
- *           type: string
+ *     userIdParam: # Can be referenced via '#/components/parameters/userParam'
+ *       in: path
+ *       name: userId
+ *       required: true
+ *       description: An ID that uniquely identifies the user.
+ *       schema:
+ *         type: string
+ *     metadataKeyParam:
+ *       in: path
+ *       name: metadataKey
+ *       required: true
+ *       description: The key of the metadata to be modified or deleted.
+ *       schema:
+ *         type: string
+ *     usernameBoolParam:
+ *       in: query
+ *       name: username
+ *       description: use username or userId true/false (default false).
+ *       schema:
+ *         type: string
+ *     currencyId: # Can be referenced via '#/components/parameters/currencyId'
+ *       in: path
+ *       name: currencyId
+ *       required: true
+ *       description: The ID of the currency.
+ *       schema:
+ *         $ref: "#/components/schemas/UUIDString"
+ * tags:
+ *   - name: auth
+ *     description: auth endpoints
+ *   - name: status
+ *     description: get the connection status
+ *   - name: effects
+ *     description: find out all about effects
  */
