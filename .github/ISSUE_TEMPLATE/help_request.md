@@ -1,9 +1,7 @@
 ---
 name: Help request
 about: Request help with an issue you are having.
-title: "[Support] "
-labels: Support
-
+type: "Support"
 ---
 
 **Help Request**

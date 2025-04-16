@@ -1,7 +1,6 @@
 name: Bug Report
 description: File a bug report
-title: "[Bug] "
-labels: ["Bug"]
+type: "Bug"
 body:
   - type: markdown
     attributes:
@@ -51,6 +50,7 @@ body:
         - Windows 10
         - Windows 11
         - Linux Distro
+        - MacOS
         - Other
     validations:
       required: true
