@@ -331,31 +331,30 @@
                 service.clearUserList();
             });
 
-            backendCommunicator.on("twitch:chat:automod-update", ({messageId, newStatus, resolverName, flaggedPhrases}) => {
-                if (newStatus === "ALLOWED") {
-                    service.chatQueue = service.chatQueue.filter(i => i?.data?.id !== messageId);
-                    service.chatAlertMessage(`${resolverName} approved a message that contains: ${flaggedPhrases.join(", ")}`);
-                } else {
-                    const messageItem = service.chatQueue.find(i => i.type === "message" && i.data.id === messageId);
+            backendCommunicator.on("twitch:chat:automod-update", ({messageId, newStatus, resolverName }) => {
 
-                    if (messageItem == null) {
-                        return;
-                    }
-
-                    messageItem.data.autoModStatus = newStatus;
-                    messageItem.data.autoModResolvedBy = resolverName;
-                }
-
-            });
-
-            backendCommunicator.on("twitch:chat:automod-update-error", ({messageId, likelyExpired}) => {
-                const messageItem = service.chatQueue.find(i => i.type === "message" && i.data.id === messageId);
+                const messageItem = service.chatQueue.find(i => i.type === "message" &&
+                    (i.data.id === messageId || i.data.autoModHeldMessageId === messageId)
+                );
 
                 if (messageItem == null) {
                     return;
                 }
 
-                messageItem.data.autoModErrorMessage = `There was an error acting on this message. ${likelyExpired ? "The time to act likely have expired." : "You may need to reauth your Streamer account."}`;
+                messageItem.data.autoModStatus = newStatus;
+                messageItem.data.autoModResolvedBy = resolverName;
+            });
+
+            backendCommunicator.on("twitch:chat:automod-update-error", ({messageId, likelyExpired}) => {
+                const messageItem = service.chatQueue.find(i => i.type === "message" &&
+                    (i.data.id === messageId || i.data.autoModHeldMessageId === messageId)
+                );
+
+                if (messageItem == null) {
+                    return;
+                }
+
+                messageItem.data.autoModErrorMessage = `There was an error acting on this message. ${likelyExpired ? "The time to act has likely expired." : "You may need to reauth your Streamer account."}`;
             });
 
             backendCommunicator.on("twitch:chat:clear-feed", (modUsername) => {
@@ -394,6 +393,13 @@
                 if (chatMessage.tagged) {
                     soundService.playChatNotification();
                 }
+                if (chatMessage.isAutoModHeld === true) {
+                    setTimeout(() => {
+                        if (chatMessage.autoModStatus === "pending") {
+                            chatMessage.autoModStatus = "expired";
+                        }
+                    }, 5 * 60 * 1000);
+                }
 
                 pronounsService.getUserPronoun(chatMessage.username);
 
@@ -409,6 +415,32 @@
                 if (user && user.roles.length !== chatMessage.roles.length) {
                     user.roles = chatMessage.roles;
                     service.chatUserUpdated(user);
+                }
+
+                // when an automod held message is approved, the message is sent again,
+                // attempt to merge it with the existing message
+                const existingAutoModMessageIndex = service.chatQueue.findIndex(i =>
+                    i.type === "message" &&
+                    i.data.isAutoModHeld &&
+                    i.data.autoModHeldMessageId == null &&
+                    i.data.rawText === chatMessage.rawText &&
+                    i.data.userId === chatMessage.userId &&
+                    moment().diff(i.data.timestamp, "minutes") <= 5
+                );
+                const existingAutoModMessage = service.chatQueue[existingAutoModMessageIndex]?.data;
+                if (existingAutoModMessage != null) {
+                    // merge the new message with the existing one
+                    chatMessage = {
+                        ...existingAutoModMessage,
+                        ...chatMessage,
+                        autoModHeldMessageId: existingAutoModMessage.id,
+                        isAutoModHeld: existingAutoModMessage.isAutoModHeld,
+                        autoModStatus: existingAutoModMessage.autoModStatus,
+                        autoModResolvedBy: existingAutoModMessage.autoModResolvedBy,
+                        autoModErrorMessage: existingAutoModMessage.autoModErrorMessage
+                    };
+                    // remove the existing automod message from the queue
+                    service.chatQueue.splice(existingAutoModMessageIndex, 1);
                 }
 
                 // Push new message to queue.
