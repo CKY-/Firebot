@@ -22,7 +22,7 @@ import * as auth from "./controllers/auth-api-controller";
  *         type: string
  *   get:
  *     tags:
- *       - auth
+ *       - Auth
  *     description: Redirects the user to the authorization URI of the specified authentication provider. (e.g., Google OAuth2 authorization page).
  *     responses:
  *       200:
@@ -44,7 +44,7 @@ router.route("/auth")
  *         type: string
  *   get:
  *     tags:
- *       - auth
+ *       - Auth
  *     description: Callback endpoint for authentication providers after user authorization. It exchanges the authorization code or token for an access token.
  *     responses:
  *       200:
@@ -58,11 +58,11 @@ router.route("/auth/callback2")
     .get(auth.getAuthCallback);
 
 /**
- * @openapi
+ * //@openapi
  * /auth/tokencallback:
  *   get:
  *     tags:
- *       - auth
+ *       - Auth
  *     description: Handles token callback from the authentication provider.
  *     responses:
  *       200:
@@ -83,7 +83,7 @@ import * as status from "./controllers/status-api-controller";
  * /status:
  *   get:
  *     tags:
- *       - status
+ *       - Status
  *     description: Fetches the current status of Firebots connections, specifically the chat connection status.
  *     responses:
  *       200:
@@ -105,7 +105,7 @@ import * as effects from "./controllers/effects-api-controller";
  * /effects:
  *   get:
  *     tags:
- *      - effects
+ *      - Effects
  *     description: Fetches all effects.
  *     responses:
  *       200:
@@ -136,6 +136,8 @@ import * as effects from "./controllers/effects-api-controller";
  *                   - overlay
  *               - ...
  *   post:
+ *     tags:
+ *      - Effects
  *     description: Executes an effect.
  *     requestBody:
  *       required: true
@@ -244,6 +246,8 @@ router.route("/effects")
  *       schema:
  *         type: string
  *   get:
+ *     tags:
+ *      - Effects
  *     description: Fetches all preset lists.
  *     responses:
  *       200:
@@ -276,6 +280,8 @@ router.route("/effects/preset")
  *         type: string
  *         format: namespace:effect
  *   get:
+ *     tags:
+ *      - Effects
  *     description: Fetches a specific effect by its ID.
  *     responses:
  *       200:
@@ -319,6 +325,8 @@ router.route("/effects/:effectId")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Effects
  *     description: Runs a preset list synchronously.
  *     responses:
  *       200:
@@ -330,6 +338,8 @@ router.route("/effects/:effectId")
  *       500:
  *         description: Error response.
  *   post:
+ *     tags:
+ *      - Effects
  *     description: Runs a preset list synchronously.
  *     requestBody:
  *       content:
@@ -380,6 +390,8 @@ router.route("/effects/preset/:presetListId")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Effects
  *     description: Triggers a preset list asynchronously.
  *     responses:
  *       200:
@@ -391,6 +403,8 @@ router.route("/effects/preset/:presetListId")
  *       500:
  *         description: Error response.
  *   post:
+ *     tags:
+ *      - Effects
  *     description: Triggers a preset list asynchronously.
  *     requestBody:
  *       content:
@@ -437,6 +451,8 @@ import * as commands from "./controllers/commands-api-controller";
  * @openapi
  * /commands/system:
  *   get:
+ *     tags:
+ *      - Commands
  *     description: Fetches all system commands.
  *     responses:
  *       200:
@@ -470,6 +486,8 @@ router.route("/commands/system")
  *         type: string
  *         format: namespace:type
  *   get:
+ *     tags:
+ *      - Commands
  *     description: Fetches a specific system command by its ID.
  *     responses:
  *       200:
@@ -532,6 +550,8 @@ router.route("/commands/system/:sysCommandId")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Commands
  *     description: Executes a system command.
  *     responses:
  *       200:
@@ -543,6 +563,8 @@ router.route("/commands/system/:sysCommandId")
  *       500:
  *         description: Error executing system command sysCommandId.
  *   post:
+ *     tags:
+ *      - Commands
  *     description: Executes a system command.
  *     responses:
  *       200:
@@ -562,6 +584,8 @@ router.route("/commands/system/:sysCommandId/run")
  * @openapi
  * /commands/custom:
  *   get:
+ *     tags:
+ *      - Commands
  *     description: Fetches all custom commands.
  *     responses:
  *       200:
@@ -594,6 +618,8 @@ router.route("/commands/custom")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Commands
  *     description: Fetches a specific custom command by its ID.
  *     responses:
  *       200:
@@ -665,6 +691,8 @@ router.route("/commands/custom/:customCommandId")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Commands
  *     description: Executes a custom command.
  *     responses:
  *       200:
@@ -676,6 +704,8 @@ router.route("/commands/custom/:customCommandId")
  *       500:
  *         description: Error executing system command customCommandId.
  *   post:
+ *     tags:
+ *      - Commands
  *     description: Executes a custom command.
  *     responses:
  *       200:
@@ -698,6 +728,8 @@ import * as fonts from "./controllers/fonts-api-controller";
  * @openapi
  * /fonts:
  *   get:
+ *     tags:
+ *      - Fonts
  *     description: Fetches all font names.
  *     responses:
  *       200:
@@ -727,6 +759,8 @@ router.route("/fonts")
  *       schema:
  *         type: string
  *   get:
+ *     tags:
+ *      - Fonts
  *     description: Fetches a specific font by name.
  *     responses:
  *       200:
@@ -744,6 +778,8 @@ import * as customVariables from "./controllers/custom-variable-api-controller";
  * @openapi
  * /custom-variables:
  *   get:
+ *     tags:
+ *      - Variables
  *     description: Fetches all custom variables.
  *     responses:
  *       200:
@@ -777,11 +813,15 @@ router.route("/custom-variables")
  *       schema:
  *         $ref: "#/components/schemas/UUIDString"
  *   get:
+ *     tags:
+ *      - Variables
  *     description: Fetches a specific custom variable by name.
  *     responses:
  *       200:
  *         description: Custom variable fetched successfully.
  *   post:
+ *     tags:
+ *      - Variables
  *     description: Sets the value of a custom variable.
  *     requestBody:
  *       content:
@@ -811,6 +851,8 @@ import * as variableManager from "./controllers/variable-api-controller";
  * @openapi
  * /variables:
  *   get:
+ *     tags:
+ *      - Variables
  *     description: Fetches all replace variables.
  *     responses:
  *       200:
@@ -849,6 +891,8 @@ import * as viewers from "./controllers/viewers-api-controller";
  * @openapi
  * /viewers:
  *   get:
+ *     tags:
+ *      - Viewers
  *     description: Fetches all viewers.
  *     responses:
  *       200:
@@ -872,6 +916,8 @@ router.route("/viewers")
  * @openapi
  * /viewers/export:
  *   get:
+ *     tags:
+ *      - Viewers
  *     description: Exports all user data as JSON.
  *     responses:
  *       200:
@@ -930,6 +976,8 @@ router.route("/viewers/export")
  *       schema:
  *         type: string
  *   get:
+ *     tags:
+ *      - Viewers
  *     description: Fetches metadata of a specific viewer by userId.
  *     responses:
  *       200:
@@ -996,6 +1044,8 @@ router.route("/viewers/:userId")
  *       schema:
  *         type: string
  *   post:
+ *     tags:
+ *      - Viewers
  *     description: Updates metadata for a specific viewer.
  *     requestBody:
  *       content:
@@ -1016,6 +1066,8 @@ router.route("/viewers/:userId")
  *       404:
  *         description: Specified viewer does not exist.
  *   put:
+ *     tags:
+ *      - Viewers
  *     description: Updates metadata for a specific viewer.
  *     requestBody:
  *       content:
@@ -1035,6 +1087,8 @@ router.route("/viewers/:userId")
  *       404:
  *         description: Specified viewer does not exist.
  *   delete:
+ *     tags:
+ *      - Viewers
  *     description: Removes metadata for a specific viewer.
  *     responses:
  *       204:
@@ -1091,6 +1145,8 @@ router.route("/viewers/:userId/metadata/:metadataKey")
  *       schema:
  *         type: string
  *   get:
+ *     tags:
+ *      - Viewers
  *     description: Fetches currency details for a specific viewer.
  *     responses:
  *       200:
@@ -1116,6 +1172,8 @@ router.route("/viewers/:userId/currency")
  *    - $ref: "#/components/parameters/currencyId"
  *    - $ref: "#/components/parameters/usernameBoolParam"
  *   get:
+ *     tags:
+ *      - Viewers
  *     description: Fetches specific currency details for a viewer.
  *     responses:
  *       200:
@@ -1141,6 +1199,8 @@ router.route("/viewers/:userId/currency")
  *                   status: error
  *                   message: No viewerId provided.
  *   post:
+ *     tags:
+ *      - Viewers
  *     description: Sets the currency for a specific viewer.
  *     requestBody:
  *       content:
@@ -1184,6 +1244,8 @@ router.route("/viewers/:userId/currency/:currencyId")
  *       schema:
  *         type: string
  *   get:
+ *     tags:
+ *      - Viewers
  *     description: Fetches custom roles for a specific viewer.
  *     responses:
  *       200:
@@ -1213,6 +1275,8 @@ router.route("/viewers/:userId/customRoles")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   post:
+ *     tags:
+ *      - Viewers
  *     description: Adds a specific viewer to a custom role.
  *     responses:
  *       201:
@@ -1222,6 +1286,8 @@ router.route("/viewers/:userId/customRoles")
  *       404:
  *         description: Specified custom role does not exist.
  *   delete:
+ *     tags:
+ *      - Viewers
  *     description: Removes a specific viewer from a custom role.
  *     responses:
  *       204:
@@ -1242,6 +1308,8 @@ import * as customRoles from "./controllers/custom-roles-api-controller";
  * @openapi
  * /customRoles:
  *   get:
+ *     tags:
+ *      - Custom Roles
  *     description: Fetches all custom roles.
  *     responses:
  *       200:
@@ -1261,6 +1329,8 @@ router.route("/customRoles")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Custom Roles
  *     description: Fetches a specific custom role by its ID.
  *     responses:
  *       200:
@@ -1284,6 +1354,8 @@ router.route("/customRoles/:customRoleId")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Custom Roles
  *     description: Clears all viewers from a specific custom role.
  *     responses:
  *       204:
@@ -1313,6 +1385,8 @@ router.route("/customRoles/:customRoleId/clear")
  *       schema:
  *         type: string
  *   post:
+ *     tags:
+ *      - Custom Roles
  *     description: Adds a specific viewer to a custom role.
  *     responses:
  *       201:
@@ -1348,6 +1422,8 @@ router.route("/customRoles/:customRoleId/clear")
  *                   status: error
  *                   message: Specified viewer does not exist.
  *   delete:
+ *     tags:
+ *      - Custom Roles
  *     description: Removes a specific viewer from a custom role.
  *     responses:
  *       204:
@@ -1392,6 +1468,8 @@ import * as currency from "./controllers/currency-api-controller";
  * @openapi
  * /currency:
  *   get:
+ *     tags:
+ *      - Currency
  *     description: Fetches all currencies.
  *     responses:
  *       200:
@@ -1411,6 +1489,8 @@ router.route("/currency")
  *       schema:
  *         type: string
  *   get:
+ *     tags:
+ *      - Currency
  *     description: Fetches specific currency details by name.
  *     responses:
  *       200:
@@ -1435,6 +1515,8 @@ router.route("/currency/:currencyName")
  *         type: integer
  *       description: top count to return.
  *   get:
+ *     tags:
+ *      - Currency
  *     description: Fetches top currency holders for a specific currency.
  *     responses:
  *       200:
@@ -1450,11 +1532,15 @@ import * as quotes from "./controllers/quotes-api-controller";
  * @openapi
  * /quotes:
  *   get:
+ *     tags:
+ *      - Quotes
  *     description: Fetches all quotes.
  *     responses:
  *       200:
  *         description: Quote updated successfully.
  *   post:
+ *     tags:
+ *      - Quotes
  *     description: Posts a new quote.
  *     requestBody:
  *       content:
@@ -1519,6 +1605,8 @@ router.route("/quotes")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Quotes
  *     description: Fetches a specific quote by its ID.
  *     responses:
  *       200:
@@ -1526,6 +1614,8 @@ router.route("/quotes")
  *       404:
  *         description: Quote quoteId not found.
  *   put:
+ *     tags:
+ *      - Quotes
  *     description: Updates a specific quote by its ID.
  *     requestBody:
  *       content:
@@ -1569,6 +1659,8 @@ router.route("/quotes")
  *       500:
  *         description: Error creating quote 'reason'.
  *   patch:
+ *     tags:
+ *      - Quotes
  *     description: Partially updates a specific quote by its ID.
  *     requestBody:
  *       content:
@@ -1603,6 +1695,8 @@ router.route("/quotes")
  *       500:
  *         description: Error creating quote 'reason'.
  *   delete:
+ *     tags:
+ *      - Quotes
  *     description: Deletes a specific quote by its ID.
  *     responses:
  *       204:
@@ -1623,6 +1717,8 @@ import * as counters from "./controllers/counters-api-controller";
  * @openapi
  * /counters:
  *   get:
+ *     tags:
+ *      - Counters
  *     description: Fetches all counters.
  *     responses:
  *       200:
@@ -1642,6 +1738,8 @@ router.route("/counters")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Counters
  *     description: Fetches a specific counter by its ID.
  *     responses:
  *       200:
@@ -1651,6 +1749,8 @@ router.route("/counters")
  *       404:
  *         description: Counter counterId not found.
  *   post:
+ *     tags:
+ *      - Counters
  *     description: Updates a specific counter by its ID.
  *     requestBody:
  *       content:
@@ -1707,6 +1807,8 @@ import * as timers from "./controllers/timers-api-controller";
  * @openapi
  * /timers:
  *   get:
+ *     tags:
+ *      - Timers
  *     description: Fetches all timers.
  *     responses:
  *       200:
@@ -1726,6 +1828,8 @@ router.route("/timers")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Timers
  *     description: Fetches a specific timer by its ID.
  *     responses:
  *       200:
@@ -1756,6 +1860,8 @@ router.route("/timers/:timerId")
  *         type: string
  *         enum: [toggle, enable, disable, clear]
  *   get:
+ *     tags:
+ *      - Timers
  *     description: Updates a specific timer by its ID.
  *     responses:
  *       200:
@@ -1788,6 +1894,8 @@ import * as queues from "./controllers/effect-queues-api-controller";
  * @openapi
  * /queues:
  *   get:
+ *     tags:
+ *      - Effect Queues
  *     description: Fetches all queues.
  *     responses:
  *       200:
@@ -1807,6 +1915,8 @@ router.route("/queues")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Effect Queues
  *     description: Fetches a specific queue by its ID.
  *     responses:
  *       200:
@@ -1830,6 +1940,8 @@ router.route("/queues/:queueId")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Effect Queues
  *     description: Pauses a specific queue by its ID.
  *     responses:
  *       200:
@@ -1839,6 +1951,8 @@ router.route("/queues/:queueId")
  *       404:
  *         description: Queue queueId not found.
  *   post:
+ *     tags:
+ *      - Effect Queues
  *     description: Pauses a specific queue by its ID.
  *     responses:
  *       200:
@@ -1863,6 +1977,8 @@ router.route("/queues/:queueId/pause")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Effect Queues
  *     description: Resumes a specific queue by its ID.
  *     responses:
  *       200:
@@ -1872,6 +1988,8 @@ router.route("/queues/:queueId/pause")
  *       404:
  *         description: Queue queueId not found.
  *   post:
+ *     tags:
+ *      - Effect Queues
  *     description: Resumes a specific queue by its ID.
  *     responses:
  *       200:
@@ -1896,6 +2014,8 @@ router.route("/queues/:queueId/resume")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Effect Queues
  *     description: Toggles a specific queue by its ID.
  *     responses:
  *       200:
@@ -1905,6 +2025,8 @@ router.route("/queues/:queueId/resume")
  *       404:
  *         description: Queue queueId not found.
  *   post:
+ *     tags:
+ *      - Effect Queues
  *     description: Toggles a specific queue by its ID.
  *     responses:
  *       200:
@@ -1929,6 +2051,8 @@ router.route("/queues/:queueId/toggle")
  *       schema:
  *         $ref: '#/components/schemas/UUIDString'
  *   get:
+ *     tags:
+ *      - Effect Queues
  *     description: Clears a specific queue by its ID.
  *     responses:
  *       200:
@@ -1938,6 +2062,8 @@ router.route("/queues/:queueId/toggle")
  *       404:
  *         description: Queue queueId not found.
  *   post:
+ *     tags:
+ *      - Effect Queues
  *     description: Clears a specific queue by its ID.
  *     responses:
  *       200:
@@ -1988,10 +2114,30 @@ module.exports = router;
  *       schema:
  *         $ref: "#/components/schemas/UUIDString"
  * tags:
- *   - name: auth
- *     description: auth endpoints
- *   - name: status
- *     description: get the connection status
- *   - name: effects
- *     description: find out all about effects
+ *   - name: Auth
+ *     description: view all auth endpoints
+ *   - name: Status
+ *     description: view the connection status
+ *   - name: Commands
+ *     description: view all endpoints for commands
+ *   - name: Counters
+ *     description: view all endpoints for counters
+ *   - name: Currency
+ *     description: view all endpoints for currencies
+ *   - name: Custom Roles
+ *     description: view all endpoints for custom roles
+ *   - name: Effects
+ *     description: view all endpoints for effects
+ *   - name: Effect Queues
+ *     description: view all endpoints for effect queues
+ *   - name: Fonts
+ *     description: view all endpoints for installed fonts
+ *   - name: Quotes
+ *     description: view all endpoints for quotes
+ *   - name: Timers
+ *     description: view all endpoints for Timers
+ *   - name: Variables
+ *     description: view all endpoints for variables
+ *   - name: Viewers
+ *     description: view all endpoints for viewers
  */

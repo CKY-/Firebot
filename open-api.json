@@ -28,9 +28,9 @@
       ],
       "get": {
         "tags": [
-          "auth"
+          "Auth"
         ],
-        "description": "Returns authentication details.",
+        "description": "Redirects the user to the authorization URI of the specified authentication provider. (e.g., Google OAuth2 authorization page).",
         "responses": {
           "200": {
             "description": "Auth details returned successfully."
@@ -46,7 +46,7 @@
         {
           "in": "query",
           "name": "state",
-          "description": "Client generated random string for the state parameter..",
+          "description": "The state passed in the initial authentication request, used to identify the provider..",
           "schema": {
             "type": "string"
           }
@@ -54,9 +54,9 @@
       ],
       "get": {
         "tags": [
-          "auth"
+          "Auth"
         ],
-        "description": "Handles the callback from the authentication provider.",
+        "description": "Callback endpoint for authentication providers after user authorization. It exchanges the authorization code or token for an access token.",
         "responses": {
           "200": {
             "description": "Authentication callback handled."
@@ -70,31 +70,12 @@
         }
       }
     },
-    "/auth/tokencallback": {
-      "get": {
-        "tags": [
-          "auth"
-        ],
-        "description": "Handles token callback from the authentication provider.",
-        "responses": {
-          "200": {
-            "description": "Token callback handled."
-          },
-          "400": {
-            "description": "Invalid provider id in state."
-          },
-          "500": {
-            "description": "Authentication failed."
-          }
-        }
-      }
-    },
     "/status": {
       "get": {
         "tags": [
-          "status"
+          "Status"
         ],
-        "description": "Returns the status of the API or system.",
+        "description": "Fetches the current status of Firebots connections, specifically the chat connection status.",
         "responses": {
           "200": {
             "description": "Status returned successfully.",
@@ -114,7 +95,7 @@
     "/effects": {
       "get": {
         "tags": [
-          "effects"
+          "Effects"
         ],
         "description": "Fetches all effects.",
         "responses": {
@@ -158,6 +139,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Effects"
+        ],
         "description": "Executes an effect.",
         "requestBody": {
           "required": true,
@@ -306,6 +290,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Effects"
+        ],
         "description": "Fetches all preset lists.",
         "responses": {
           "200": {
@@ -348,6 +335,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Effects"
+        ],
         "description": "Fetches a specific effect by its ID.",
         "responses": {
           "200": {
@@ -400,6 +390,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Effects"
+        ],
         "description": "Runs a preset list synchronously.",
         "responses": {
           "200": {
@@ -417,6 +410,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Effects"
+        ],
         "description": "Runs a preset list synchronously.",
         "requestBody": {
           "content": {
@@ -485,6 +481,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Effects"
+        ],
         "description": "Triggers a preset list asynchronously.",
         "responses": {
           "200": {
@@ -502,6 +501,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Effects"
+        ],
         "description": "Triggers a preset list asynchronously.",
         "requestBody": {
           "content": {
@@ -559,6 +561,9 @@
     },
     "/commands/system": {
       "get": {
+        "tags": [
+          "Commands"
+        ],
         "description": "Fetches all system commands.",
         "responses": {
           "200": {
@@ -602,6 +607,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Commands"
+        ],
         "description": "Fetches a specific system command by its ID.",
         "responses": {
           "200": {
@@ -670,6 +678,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Commands"
+        ],
         "description": "Executes a system command.",
         "responses": {
           "200": {
@@ -687,6 +698,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Commands"
+        ],
         "description": "Executes a system command.",
         "responses": {
           "200": {
@@ -706,6 +720,9 @@
     },
     "/commands/custom": {
       "get": {
+        "tags": [
+          "Commands"
+        ],
         "description": "Fetches all custom commands.",
         "responses": {
           "200": {
@@ -748,6 +765,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Commands"
+        ],
         "description": "Fetches a specific custom command by its ID.",
         "responses": {
           "200": {
@@ -838,6 +858,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Commands"
+        ],
         "description": "Executes a custom command.",
         "responses": {
           "200": {
@@ -855,6 +878,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Commands"
+        ],
         "description": "Executes a custom command.",
         "responses": {
           "200": {
@@ -874,6 +900,9 @@
     },
     "/fonts": {
       "get": {
+        "tags": [
+          "Fonts"
+        ],
         "description": "Fetches all font names.",
         "responses": {
           "200": {
@@ -912,6 +941,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Fonts"
+        ],
         "description": "Fetches a specific font by name.",
         "responses": {
           "200": {
@@ -925,6 +957,9 @@
     },
     "/custom-variables": {
       "get": {
+        "tags": [
+          "Variables"
+        ],
         "description": "Fetches all custom variables.",
         "responses": {
           "200": {
@@ -967,6 +1002,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Variables"
+        ],
         "description": "Fetches a specific custom variable by name.",
         "responses": {
           "200": {
@@ -975,6 +1013,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Variables"
+        ],
         "description": "Sets the value of a custom variable.",
         "requestBody": {
           "content": {
@@ -1005,6 +1046,9 @@
     },
     "/variables": {
       "get": {
+        "tags": [
+          "Variables"
+        ],
         "description": "Fetches all replace variables.",
         "responses": {
           "200": {
@@ -1053,6 +1097,9 @@
     },
     "/viewers": {
       "get": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Fetches all viewers.",
         "responses": {
           "200": {
@@ -1081,6 +1128,9 @@
     },
     "/viewers/export": {
       "get": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Exports all user data as JSON.",
         "responses": {
           "200": {
@@ -1156,6 +1206,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Fetches metadata of a specific viewer by userId.",
         "responses": {
           "200": {
@@ -1243,6 +1296,9 @@
         }
       ],
       "post": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Updates metadata for a specific viewer.",
         "requestBody": {
           "content": {
@@ -1275,6 +1331,9 @@
         }
       },
       "put": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Updates metadata for a specific viewer.",
         "requestBody": {
           "content": {
@@ -1306,6 +1365,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Removes metadata for a specific viewer.",
         "responses": {
           "204": {
@@ -1381,6 +1443,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Fetches currency details for a specific viewer.",
         "responses": {
           "200": {
@@ -1416,6 +1481,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Fetches specific currency details for a viewer.",
         "responses": {
           "200": {
@@ -1455,6 +1523,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Sets the currency for a specific viewer.",
         "requestBody": {
           "content": {
@@ -1515,6 +1586,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Fetches custom roles for a specific viewer.",
         "responses": {
           "200": {
@@ -1551,6 +1625,9 @@
         }
       ],
       "post": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Adds a specific viewer to a custom role.",
         "responses": {
           "201": {
@@ -1565,6 +1642,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "Viewers"
+        ],
         "description": "Removes a specific viewer from a custom role.",
         "responses": {
           "204": {
@@ -1581,6 +1661,9 @@
     },
     "/customRoles": {
       "get": {
+        "tags": [
+          "Custom Roles"
+        ],
         "description": "Fetches all custom roles.",
         "responses": {
           "200": {
@@ -1602,6 +1685,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Custom Roles"
+        ],
         "description": "Fetches a specific custom role by its ID.",
         "responses": {
           "200": {
@@ -1629,6 +1715,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Custom Roles"
+        ],
         "description": "Clears all viewers from a specific custom role.",
         "responses": {
           "204": {
@@ -1665,6 +1754,9 @@
         }
       ],
       "post": {
+        "tags": [
+          "Custom Roles"
+        ],
         "description": "Adds a specific viewer to a custom role.",
         "responses": {
           "201": {
@@ -1719,6 +1811,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "Custom Roles"
+        ],
         "description": "Removes a specific viewer from a custom role.",
         "responses": {
           "204": {
@@ -1773,6 +1868,9 @@
     },
     "/currency": {
       "get": {
+        "tags": [
+          "Currency"
+        ],
         "description": "Fetches all currencies.",
         "responses": {
           "200": {
@@ -1794,6 +1892,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Currency"
+        ],
         "description": "Fetches specific currency details by name.",
         "responses": {
           "200": {
@@ -1823,6 +1924,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Currency"
+        ],
         "description": "Fetches top currency holders for a specific currency.",
         "responses": {
           "200": {
@@ -1833,6 +1937,9 @@
     },
     "/quotes": {
       "get": {
+        "tags": [
+          "Quotes"
+        ],
         "description": "Fetches all quotes.",
         "responses": {
           "200": {
@@ -1841,6 +1948,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Quotes"
+        ],
         "description": "Posts a new quote.",
         "requestBody": {
           "content": {
@@ -1928,6 +2038,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Quotes"
+        ],
         "description": "Fetches a specific quote by its ID.",
         "responses": {
           "200": {
@@ -1939,6 +2052,9 @@
         }
       },
       "put": {
+        "tags": [
+          "Quotes"
+        ],
         "description": "Updates a specific quote by its ID.",
         "requestBody": {
           "content": {
@@ -2003,6 +2119,9 @@
         }
       },
       "patch": {
+        "tags": [
+          "Quotes"
+        ],
         "description": "Partially updates a specific quote by its ID.",
         "requestBody": {
           "content": {
@@ -2052,6 +2171,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "Quotes"
+        ],
         "description": "Deletes a specific quote by its ID.",
         "responses": {
           "204": {
@@ -2065,6 +2187,9 @@
     },
     "/counters": {
       "get": {
+        "tags": [
+          "Counters"
+        ],
         "description": "Fetches all counters.",
         "responses": {
           "200": {
@@ -2086,6 +2211,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Counters"
+        ],
         "description": "Fetches a specific counter by its ID.",
         "responses": {
           "200": {
@@ -2100,6 +2228,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Counters"
+        ],
         "description": "Updates a specific counter by its ID.",
         "requestBody": {
           "content": {
@@ -2170,6 +2301,9 @@
     },
     "/timers": {
       "get": {
+        "tags": [
+          "Timers"
+        ],
         "description": "Fetches all timers.",
         "responses": {
           "200": {
@@ -2191,6 +2325,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Timers"
+        ],
         "description": "Fetches a specific timer by its ID.",
         "responses": {
           "200": {
@@ -2233,6 +2370,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Timers"
+        ],
         "description": "Updates a specific timer by its ID.",
         "responses": {
           "200": {
@@ -2269,6 +2409,9 @@
     },
     "/queues": {
       "get": {
+        "tags": [
+          "Effect Queues"
+        ],
         "description": "Fetches all queues.",
         "responses": {
           "200": {
@@ -2290,6 +2433,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Effect Queues"
+        ],
         "description": "Fetches a specific queue by its ID.",
         "responses": {
           "200": {
@@ -2317,6 +2463,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Effect Queues"
+        ],
         "description": "Pauses a specific queue by its ID.",
         "responses": {
           "200": {
@@ -2331,6 +2480,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Effect Queues"
+        ],
         "description": "Pauses a specific queue by its ID.",
         "responses": {
           "200": {
@@ -2358,6 +2510,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Effect Queues"
+        ],
         "description": "Resumes a specific queue by its ID.",
         "responses": {
           "200": {
@@ -2372,6 +2527,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Effect Queues"
+        ],
         "description": "Resumes a specific queue by its ID.",
         "responses": {
           "200": {
@@ -2399,6 +2557,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Effect Queues"
+        ],
         "description": "Toggles a specific queue by its ID.",
         "responses": {
           "200": {
@@ -2413,6 +2574,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Effect Queues"
+        ],
         "description": "Toggles a specific queue by its ID.",
         "responses": {
           "200": {
@@ -2440,6 +2604,9 @@
         }
       ],
       "get": {
+        "tags": [
+          "Effect Queues"
+        ],
         "description": "Clears a specific queue by its ID.",
         "responses": {
           "200": {
@@ -2454,6 +2621,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Effect Queues"
+        ],
         "description": "Clears a specific queue by its ID.",
         "responses": {
           "200": {
@@ -2516,16 +2686,56 @@
   },
   "tags": [
     {
-      "name": "auth",
-      "description": "auth endpoints"
+      "name": "Auth",
+      "description": "view all auth endpoints"
     },
     {
-      "name": "status",
-      "description": "get the connection status"
+      "name": "Status",
+      "description": "view the connection status"
     },
     {
-      "name": "effects",
-      "description": "find out all about effects"
+      "name": "Commands",
+      "description": "view all endpoints for commands"
+    },
+    {
+      "name": "Counters",
+      "description": "view all endpoints for counters"
+    },
+    {
+      "name": "Currency",
+      "description": "view all endpoints for currencies"
+    },
+    {
+      "name": "Custom Roles",
+      "description": "view all endpoints for custom roles"
+    },
+    {
+      "name": "Effects",
+      "description": "view all endpoints for effects"
+    },
+    {
+      "name": "Effect Queues",
+      "description": "view all endpoints for effect queues"
+    },
+    {
+      "name": "Fonts",
+      "description": "view all endpoints for installed fonts"
+    },
+    {
+      "name": "Quotes",
+      "description": "view all endpoints for quotes"
+    },
+    {
+      "name": "Timers",
+      "description": "view all endpoints for Timers"
+    },
+    {
+      "name": "Variables",
+      "description": "view all endpoints for variables"
+    },
+    {
+      "name": "Viewers",
+      "description": "view all endpoints for viewers"
     }
   ]
 }
